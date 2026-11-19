@@ -1,0 +1,36 @@
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/auth');
+const itemRoutes = require('./routes/items');
+const claimRoutes = require('./routes/claims');
+const path = require('path');
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/items', require('./routes/items'));
+app.use('/api/claims', require('./routes/claims'));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+connectDB();
+
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Campus Lost & Found API is running'
+    });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
